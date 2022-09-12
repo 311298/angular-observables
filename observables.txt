@@ -74,3 +74,32 @@ this.variable_created_for_storing_subscription=customIntervalObservrable.subscri
 
 One thing to remember, that observable throw error it also stops the process while in completion it does not happed.
 Therefore we need to unsubscribe on event of completion of observable process.
+
+175. Observables and you!
+We rarely build any custom own observables, we just learned how it works under the hood.
+It looks to me like a promise in JS.
+
+176. Operators
+observables.pipe().subscribe() -> here is operators uses the pipe funtion to perform the work.
+It is something like inline funciton like map , filter etc
+We can check the multiple operators inside the rxjs site.
+
+177. Subjects
+Suppose we, we create one button(in child component) inside the component and we want to show a templete in html inside(in parent component) the other component like activated!!.
+In order to do that we need to create the service.
+acivatedEmitter = new EventEmitter<boolean>();
+we add the click listener to the button on child component ->
+this.service_variable.acivatedEmitter.emit(true)
+And inside the parent component we create a variable -> actiavted:boolean=false
+Inside the ngOnInit ->
+this.service_variable.acivatedEmitter(EventEmitter inside the service).subscribe(data =>{
+    this.activated(variable inside the parent component) = data
+})
+so whenever we click the button inside the child component it will emit the true boolean, and we with the help of *ngIf can see the required template inside the html
+This above approach is old approach and it will work but there is better approach with the help of Subjects.
+Everything will remain same only 2 things will defer, that are :
+1st -> when declaring inside the service -> instead of EventEmitter we will use the new Subjects<variableType>()
+2nd -> rather than emit it will be next() in child component.
+Why use the subject instead of observable; well subject is used when code written is active and can be triggered while observables are used in passive coding.
+Google search when to use Subjects and when to use observables.
+As Subjects is a special kind of observable therefore we need to unsubscribe inside the ngOnDestroy.
