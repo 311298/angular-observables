@@ -1,0 +1,76 @@
+section 13: Understanding Observables
+
+===========================================================
+
+npm install --save rxjs@6
+npm install --save rxjs-compat
+
+===========================================================
+
+172. Analysing Angular Observables
+Observables are constructs which are continuously running in browser background which we subscribe.
+Observables are the stream of data which whenever get changes we will get know about once we are subscribed.
+
+173. Getting closer to core of observables
+Observables are not the in-built feature of typescript or javascript. Therefore we need to import it from rxjs.
+as setInterval in observables we have the Interval.
+Below function is inside the ngOnInit.
+Interval(1000).subscribe(count=>{
+    console.log(count)
+})
+So for every 1sec, a new event will be triggered and under the {} code will be performed.
+Interval is observables, therefore we need to subscribe it.
+Observables need to stop, or it will perform the memory leaks.
+routes.params are observables which are automatically terminated when not in used.
+private variable_for_observables:Subscriptions; -> assign the variable to Interval observables.
+implements onDestroy on class component
+inside the ngOnDestroy(){
+    this.variable_for_observables.unsubscribe()
+}
+
+174. Building the custom observables
+we will implement the above Interval in-built observables, by ourself.
+inside the ngOnInit(){
+    const customIntervalObservrable = Observable.create(observer =>{
+        let count =0;
+        setInterval(()=>{
+            observer.next(count)
+            count++
+        },timeVariable_like_1000)
+    })
+    this.variable_created_for_storing_subscription=customIntervalObservrable.subscribe(date=>{
+        console.log(data) // this is doing same task as above count interval using the Interval in-built observables
+    })
+}
+observer => is part in code which is interested in about the new data , new error or part is about to be completed.
+
+175. Errors and Completion
+As the above implementation of Interval is very simple and will not have any error, but it will not be in case of https requestion.
+Therefore for error handling and completion of any requests, code is below:
+const customIntervalObservrable = Observable.create(observer =>{
+        let count =0;
+        setInterval(()=>{
+            observer.next(count)
+            /* new code starts
+            if(count == 2){
+                observer.complete()
+            }
+            if(count>3){
+                observer.error(new Error('count is above 3'))
+            }
+            new code ends */
+            count++
+        },timeVariable_like_1000)
+    })
+this.variable_created_for_storing_subscription=customIntervalObservrable.subscribe(date=>{
+        console.log(data)
+    }/* new code starts ,error=>{
+        alert(error.message)
+    },()=>{
+        console.log('process completed')
+    }
+     new code ends */
+     )
+
+One thing to remember, that observable throw error it also stops the process while in completion it does not happed.
+Therefore we need to unsubscribe on event of completion of observable process.
